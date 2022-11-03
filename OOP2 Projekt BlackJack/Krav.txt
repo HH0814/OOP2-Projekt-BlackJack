@@ -1,0 +1,33 @@
+Är ett interaktivt spel, skrivet i C#, för minst 1 spelare, som går att spela i konsolen.
+check
+
+Går att kompilera med “Nullable” satt till “enable” och “WarningsAsErrors” satt till “Nullable”.
+check
+
+Uppvisar meningsfullt användande av "subtypspolymorfism".
+check
+
+Uppvisar meningsfullt användande av “abstrakt injicerad objektkomposition" eller "abstrakt beroendeinjektion".
+check
+
+Uppvisar meningsfullt användande av “pattern matching”. // borde man kunna anv'nd pattern matching f;r korten och dess intvarden?
+check
+
+Uppvisar meningsfullt användande av “lambda expressions” i “LINQ”.
+kanske check
+
+
+
+inte klart
+
+Uppvisar meningsfullt användande av minst 1 av följande designmönster: Bridge, Observer, Composite, Factory method, Visitor, State.
+
+Uppvisar meningsfullt användande av eget definierad “generisk datatyp”.
+
+Uppvisar meningsfullt användande av "varians" i kontexten "generics".
+
+
+
+
+
+

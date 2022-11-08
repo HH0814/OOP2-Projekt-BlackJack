@@ -1,23 +1,25 @@
-/*namespace projekt
+using Projekt;
+
+namespace projekt
+{
     class Order
     {
-        public List<Player>? players;
+        public List<Participant>? participants;
 
-        void AddPlayer(Player player)
+        void AddPlayer(Participant participant)
         {
-            players.Add(player);
+            participants.Add(participant);
         }
-        void RemovePlayer(Player player)
+        void RemovePlayer(Participant player)
         {
-            players.Remove(player);
+            participants.Remove(player);
         }
         //Jag vet inte riktikgt hur vi ska lösa detta med att fa ut ordningen.
-        List<Player> CreateOrder()
+        List<Participant> CreateOrder()
         {
             //Returnera en lista med spelare i ordning
-            players = new List<Player>();
-            return players;
+            participants = new List<Participant>();
+            return participants;
         }
     }
 }   
-*/

@@ -1,0 +1,11 @@
+﻿TODO
+
+Vad ska vad ska vi använda som en generic data type? bet, chipstack?
+
+Hur ska vi implementera klassen Chips som en generisk datatyp? 
+
+Chips<T in T out> chips = new Chips<T in T out>(T in T out);
+
+
+Vilket design pattern ska användas var och varför?
+Observer pattern?

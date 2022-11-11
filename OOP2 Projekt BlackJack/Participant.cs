@@ -4,6 +4,7 @@ namespace Projekt{
         private IBehaviour behaviour;
         public Hand hand;
         public Deck deck;
+        public Chips chipstack;
         public string name = "";
         public void SetName(string inputNameString){
             name = "PlayerName"; //inputNameString;
@@ -70,7 +71,7 @@ namespace Projekt{
 
         public void DoubleDown()
         {
-            if (behaviour.DoubleDownPossible(hand, Chips playerChipstack))
+            if (behaviour.DoubleDownPossible(hand, chipstack))
             {
                 //chipStack -= bet;
                 //bet *= 2;

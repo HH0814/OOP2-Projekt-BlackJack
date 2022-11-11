@@ -4,7 +4,7 @@ namespace Projekt
     {
         public bool HitPossible(Hand pHand);
         public bool StandPossible(Hand pHand);
-        public bool DoubleDownPossible(Hand pHand);
+        public bool DoubleDownPossible(Hand pHand Chips pChipStack);
         public bool SplitPossible(Hand pHand);
 
     }
@@ -19,7 +19,7 @@ namespace Projekt
         {
             return true;
         }
-        public bool DoubleDownPossible(Hand pHand)
+        public bool DoubleDownPossible(Hand pHand, Chips pChipStack)
         {
             return true;
         }

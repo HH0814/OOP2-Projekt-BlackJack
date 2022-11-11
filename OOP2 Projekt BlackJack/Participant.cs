@@ -73,9 +73,10 @@ namespace Projekt{
         {
             if (behaviour.DoubleDownPossible(hand, chipstack))
             {
-                //chipStack -= bet; //denna ar fel
-                //bet *= 2;
-                //Hit();
+                //jag tror dett ar ratt
+                Participant.Player(deck).chipstack.chipStack -= Participant.Player(deck).chipstack.bet;
+                Participant.Player(deck).chipstack.bet *= 2;
+                Hit();
             }
             else
             {

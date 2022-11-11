@@ -74,7 +74,7 @@ namespace Projekt{
         {
             if (behaviour.DoubleDownPossible(hand, chipstack))
             {
-                //chipStack -= bet;
+                //chipStack -= bet; //denna ar fel
                 //bet *= 2;
                 //Hit();
             }

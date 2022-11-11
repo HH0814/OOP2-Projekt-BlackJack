@@ -10,7 +10,6 @@ namespace Projekt{
             name = "PlayerName"; //inputNameString;
         }
         public Chips chipStack {get; set; }
-        public Chips bet {get; set; }
         public int Wins { get; set; }
         public int RoundsCompleted { get; set; } = 1;
         public void Hit()
@@ -83,15 +82,21 @@ namespace Projekt{
             }
         }
 
-        public bool Split()
+        public Participant Split()
         {
             if (behaviour.SplitPossible(hand))
             {
-                return true;
+                Participant splitplayer = new Participant(new PlayerBehaviour(), deck); //instansierar en ny player som spelar splithanden
+                splitplayer.chipstack.bet = 1000; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
+                splitplayer.chipstack.chipStack = 0; //bor antagligen vara 0
+                splitplayer.hand.AddCard(hand.GetCard(1)); //Ger andra kortet i spelarhanden till splithanden
+                hand.RemoveCard(1); //Detta bor ta bort korten fran orginalspelaren 
+                splitplayer.DealCards(); //Detta dealar ut ett nytt kort till splithanden
+                return splitplayer; //returnerr splithanden/splitspelaren
             }
             else
             {
-                return false;
+                return null;
             }
         }
 

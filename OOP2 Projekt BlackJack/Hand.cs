@@ -68,8 +68,12 @@ class Hand
             Card card = HandList[index];
             return card;
         }
+        public void RemoveCard(int index)
+        {
+            HandList.RemoveAt(index);
+        }
 
-        public Hand()
+    public Hand()
     {   
         HandList = new List<Card>();
     }

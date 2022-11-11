@@ -8,8 +8,8 @@ namespace Projekt{
         public void SetName(string inputNameString){
             name = "PlayerName"; //inputNameString;
         }
-        //public Chips chipStack {get; set; }
-        //public int Bet {get; set; }
+        public Chips chipStack {get; set; }
+        public Chips bet {get; set; }
         public int Wins { get; set; }
         public int RoundsCompleted { get; set; } = 1;
         public void Hit()
@@ -72,7 +72,7 @@ namespace Projekt{
         {   
             return new Participant(new DealerBehaviour(), deck);
         }
-
+        
         public static Participant Player(Deck deck)
         {   
             return new Participant(new PlayerBehaviour(), deck);
@@ -86,4 +86,6 @@ namespace Projekt{
         }
 
     }
+
+    
 }

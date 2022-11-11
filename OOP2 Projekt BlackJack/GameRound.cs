@@ -89,7 +89,7 @@ namespace Projekt
             Environment.Exit(2);
         }
  
-        // list of participants
+        // list of players
         // pot
         // order
         // hands?

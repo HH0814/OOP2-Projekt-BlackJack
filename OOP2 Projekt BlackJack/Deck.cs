@@ -3,7 +3,7 @@ namespace Projekt{
 class Deck
 {
     private readonly List<Card> _deck = new();
-    private IEnumerable<Card> GenerateDeck() //Skapar en kortlek, dvs ett kort av varje valör och färg
+    private IEnumerable<Card> GenerateDeck() //Skapar en kortlek, dvs ett kort av varje valör och färg  
     {
         for (var i = 0; i < Enum.GetValues(typeof(Card.SuitType)).Length; i++)
         {
@@ -11,7 +11,7 @@ class Deck
             {
                 yield return new Card((Card.SuitType)i, (Card.CardValueType) j); //yield
             }
-        }
+        }   
     }
     private Random rng = new Random(); 
     public void ShuffleDeck() //Modifierad shufflealgoritm från stackoverflow

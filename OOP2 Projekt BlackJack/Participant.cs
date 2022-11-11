@@ -6,7 +6,7 @@ namespace Projekt{
         //bor vi egentligen ha public participant participant; isallet for hand deck och chips. eller gar det inte pga deck?
         public Hand hand;
         public Deck deck;
-        public Chips chipstack; //vi behover denna for att kunna gora split och double aar jag ratt saker pa. 
+        public Chips chipstack; //vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
         public string name = "";
         public void SetName(string inputNameString){
             name = "PlayerName"; //inputNameString;

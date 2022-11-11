@@ -84,12 +84,16 @@ namespace Projekt{
             }
         }
 
-        public Participant Split()
+        public Participant? Split()
         {
             if (behaviour.SplitPossible(hand))
             {
                 Participant splitplayer = new Participant(new PlayerBehaviour(), deck); //instansierar en ny player som spelar splithanden
-                splitplayer.chipstack.bet = 1000; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
+                splitplayer.chipstack.bet = Participant.Player(deck).chipstack.bet; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
+                
+                //remove chips from player nedan. Jag tror anropet ar fel dock...
+                Participant.Player(deck).chipstack.chipStack = Participant.Player(deck).chipstack.chipStack - Participant.Player(deck).chipstack.bet;
+                
                 splitplayer.chipstack.chipStack = 0; //bor antagligen vara 0
                 splitplayer.hand.AddCard(hand.GetCard(1)); //Ger andra kortet i spelarhanden till splithanden
                 hand.RemoveCard(1); //Detta bor ta bort korten fran orginalspelaren 
@@ -98,6 +102,7 @@ namespace Projekt{
             }
             else
             {
+                Console.WriteLine("Something went wrong"); //Ersatt
                 return null;
             }
         }

@@ -6,12 +6,11 @@ namespace Projekt{
         //bor vi egentligen ha public participant participant; isallet for hand deck och chips. eller gar det inte pga deck?
         public Hand hand;
         public Deck deck;
-        public Chips chipstack; //vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
+        public Chips chipstack { get; set; }//vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
         public string name = "";
         public void SetName(string inputNameString){
             name = "PlayerName"; //inputNameString;
         }
-        public Chips chipStack {get; set; } //overflodig? vad gor den. man far inga errors om man kommenterar ut den.
         public int Wins { get; set; }
         public int RoundsCompleted { get; set; } = 1;
         public void Hit()

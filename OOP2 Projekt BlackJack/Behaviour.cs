@@ -4,6 +4,9 @@ namespace Projekt
     {
         public bool HitPossible(Hand pHand);
         public bool StandPossible(Hand pHand);
+        public bool DoubleDownPossible(Hand pHand);
+        public bool SplitPossible(Hand pHand);
+
     }
 
     class PlayerBehaviour : IBehaviour
@@ -13,6 +16,14 @@ namespace Projekt
             return true;
         }
         public bool StandPossible(Hand pHand)
+        {
+            return true;
+        }
+        public bool DoubleDownPossible(Hand pHand)
+        {
+            return true;
+        }
+        public bool SplitPossible(Hand pHand)
         {
             return true;
         }
@@ -42,7 +53,15 @@ namespace Projekt
             {
                 return false;
             }
-        } 
+        }
+        public bool DoubleDownPossible(Hand dealerHand)
+        {
+            return false;
+        }
+        public bool SplitPossible(Hand dealerHand)
+        {
+            return false;
+        }
         public bool DoubleDownPossible(Hand playerHand, Chips playerChipstack)
         {
             int handValue = playerHand.HandValue();

@@ -43,6 +43,36 @@ namespace Projekt
                 return false;
             }
         } 
+        public bool DoubleDownPossible(Hand playerHand, Chips playerChipstack)
+        {
+            int handValue = playerHand.HandValue();
+            int handSize = playerHand.HandSize();
+            int chipStack = playerChipstack.chipStack;
+            int bet = playerChipstack.bet;
+            if (handSize == 2 && (handValue == 9 || handValue == 10 || handValue == 11) && chipStack > bet)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool SplitPossible(Hand playerHand)
+        {
+            int handValue = playerHand.HandValue();
+            int handSize = playerHand.HandSize();
+            Card card1 = playerHand.GetCard(0);
+            Card card2 = playerHand.GetCard(1);
+            if (handSize == 2 && card1 == card2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
         

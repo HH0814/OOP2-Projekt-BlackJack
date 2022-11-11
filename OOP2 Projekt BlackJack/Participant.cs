@@ -74,8 +74,8 @@ namespace Projekt{
             if (behaviour.DoubleDownPossible(hand, chipstack))
             {
                 //jag tror dett ar ratt
-                Participant.Player(deck).chipstack.chipStack -= Participant.Player(deck).chipstack.bet;
-                Participant.Player(deck).chipstack.bet *= 2;
+                Player(deck).chipstack.chipStack -= Player(deck).chipstack.bet;
+                Player(deck).chipstack.bet *= 2;
                 Hit();
             }
             else
@@ -92,7 +92,7 @@ namespace Projekt{
                 splitplayer.chipstack.bet = Participant.Player(deck).chipstack.bet; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
                 
                 //remove chips from player nedan. Jag tror anropet ar fel dock...
-                Participant.Player(deck).chipstack.chipStack = Participant.Player(deck).chipstack.chipStack - Participant.Player(deck).chipstack.bet;
+                Player(deck).chipstack.chipStack = Player(deck).chipstack.chipStack - Player(deck).chipstack.bet;
                 
                 splitplayer.chipstack.chipStack = 0; //bor antagligen vara 0
                 splitplayer.hand.AddCard(hand.GetCard(1)); //Ger andra kortet i spelarhanden till splithanden

@@ -11,7 +11,7 @@ namespace Projekt{
         public void SetName(string inputNameString){
             name = "PlayerName"; //inputNameString;
         }
-        public Chips chipStack {get; set; }
+        public Chips chipStack {get; set; } //overflodig? vad gor den. man far inga errors om man kommenterar ut den.
         public int Wins { get; set; }
         public int RoundsCompleted { get; set; } = 1;
         public void Hit()

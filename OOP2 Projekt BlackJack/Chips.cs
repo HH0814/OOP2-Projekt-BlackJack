@@ -24,7 +24,7 @@ namespace Projekt
         }
         public void transferChips(Chips receivingChipStack, Chips givingChipStack, int input)
         {
-            //Participant.Player(Deck deck).bet.addChips(input); // man borde ha en superklass till player och dealer som heter participant.
+            bet = input;
             receivingChipStack.addChips(input);
             givingChipStack.subtractChips(input);
         }

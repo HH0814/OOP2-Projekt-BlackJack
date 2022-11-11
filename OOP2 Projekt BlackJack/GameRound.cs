@@ -62,6 +62,23 @@ namespace Projekt
                     }
                     while (!dealer.Stand() || !dealer.Bust());
                     break;
+                    case 3:
+                    player.DoubleDown();
+                    {
+                            player.DoubleDown();
+                            System.Console.WriteLine("Your Hand: " + player.hand.PrintHand());
+                            System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
+                            if (dealer.Blackjack())
+                            {
+                                System.Console.WriteLine("DEALER HAS BLACKJACK! YOU LOSE!");
+                            }
+                            if (player.Bust())
+                            {
+                                System.Console.WriteLine("BUST! YOU LOSE!");
+                            }
+                            
+                        }
+                    break;
                     default:
                     Console.WriteLine("Invalid input\nPress any key to try again.");
                     Console.ReadKey();

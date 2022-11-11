@@ -68,6 +68,32 @@ namespace Projekt{
             }
         }
 
+        public void DoubleDown()
+        {
+            if (behaviour.DoubleDownPossible(hand, Chips playerChipstack))
+            {
+                //chipStack -= bet;
+                //bet *= 2;
+                //Hit();
+            }
+            else
+            {
+                Stand();
+            }
+        }
+
+        public bool Split()
+        {
+            if (behaviour.SplitPossible(hand))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static Participant Dealer(Deck deck)
         {   
             return new Participant(new DealerBehaviour(), deck);

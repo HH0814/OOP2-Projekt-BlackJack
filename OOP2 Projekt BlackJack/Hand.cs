@@ -63,8 +63,13 @@ class Hand
     {
         HandList.Add(handCard);
     }
+        public Card GetCard(int index)
+        {
+            Card card = HandList[index];
+            return card;
+        }
 
-    public Hand()
+        public Hand()
     {   
         HandList = new List<Card>();
     }

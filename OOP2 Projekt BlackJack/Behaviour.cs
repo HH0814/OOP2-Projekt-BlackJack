@@ -4,7 +4,7 @@ namespace Projekt
     {
         public bool HitPossible(Hand pHand);
         public bool StandPossible(Hand pHand);
-        public bool DoubleDownPossible(Hand pHand Chips pChipStack);
+        public bool DoubleDownPossible(Hand pHand, Chips pChipStack);
         public bool SplitPossible(Hand pHand);
 
     }
@@ -18,49 +18,6 @@ namespace Projekt
         public bool StandPossible(Hand pHand)
         {
             return true;
-        }
-        public bool DoubleDownPossible(Hand pHand, Chips pChipStack)
-        {
-            return true;
-        }
-        public bool SplitPossible(Hand pHand)
-        {
-            return true;
-        }
-    }
-    class DealerBehaviour : IBehaviour
-    {
-        public bool HitPossible(Hand dealerHand)
-        {
-            int handValue = dealerHand.HandValue();
-            if (handValue > 17)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        public bool StandPossible(Hand dealerHand)
-        {
-            int handValue = dealerHand.HandValue();
-            if (handValue > 17)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public bool DoubleDownPossible(Hand dealerHand)
-        {
-            return false;
-        }
-        public bool SplitPossible(Hand dealerHand)
-        {
-            return false;
         }
         public bool DoubleDownPossible(Hand playerHand, Chips playerChipstack)
         {
@@ -93,6 +50,39 @@ namespace Projekt
             }
         }
     }
-
-        
+    class DealerBehaviour : IBehaviour
+    {
+        public bool HitPossible(Hand dealerHand)
+        {
+            int handValue = dealerHand.HandValue();
+            if (handValue > 17)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public bool StandPossible(Hand dealerHand)
+        {
+            int handValue = dealerHand.HandValue();
+            if (handValue > 17)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool DoubleDownPossible(Hand dealerHand, Chips dealerChipstack)
+        {
+            return false;
+        }
+        public bool SplitPossible(Hand dealerHand)
+        {
+            return false;
+        }
+    }        
 }

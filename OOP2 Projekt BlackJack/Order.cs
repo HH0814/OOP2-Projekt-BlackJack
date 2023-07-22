@@ -15,7 +15,7 @@ namespace projekt
             players.Remove(player);
         }
         //Jag vet inte riktikgt hur vi ska lösa detta med att fa ut ordningen.
-        List<Participant> CreateOrder()
+        public List<Participant> CreateOrder()
         {
             //Returnera en lista med spelare i ordning
             players = new List<Participant>();

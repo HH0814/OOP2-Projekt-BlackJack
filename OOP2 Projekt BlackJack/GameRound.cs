@@ -158,17 +158,17 @@ namespace Projekt
             switch (eventData.EventType)
             {
                 case blackjackEventType.Blackjack:
-                    Console.WriteLine("blackjack");
+                    Console.WriteLine("Blackjack");
                     break;
                 case blackjackEventType.Bust:
-                    Console.WriteLine("bust");
-                    if (players.All(p => p.Bust())) //När eventet att alla spelare har bustat sker så betyder det att dealern är klar
+                    Console.WriteLine("Bust");
+                    if (players.All(p => p.Bust())) //När eventet att alla spelare har bustat sker, så betyder det att dealern är klar
                     {
                         dealer.done = true;
                     }
                     break;
                 case blackjackEventType.Stand:
-                    Console.WriteLine("stand");
+                    Console.WriteLine("Stand");
                     break;
             }
             eventData.participant.done = true; //sätt en flagga för vad som har hänt

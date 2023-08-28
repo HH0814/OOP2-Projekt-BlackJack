@@ -1,11 +1,14 @@
+using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
+
 namespace Projekt{
-    class Participant
+    public class Participant : Subject<blackjackEvent>
     {
         private IBehaviour behaviour;
-
         //bor vi egentligen ha public participant participant; isallet for hand deck och chips. eller gar det inte pga deck?
         public Hand hand;
         public Deck deck;
+        public bool done { set; get; }
         public Chips chipstack { get; set; }//vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
         public string name = "";
         public void SetName(string inputNameString){
@@ -19,10 +22,14 @@ namespace Projekt{
             {
                 Card newCard = deck.PopCard();
                 hand.AddCard(newCard);
+                if (Bust())
+                {
+                    NotifyObservers(new blackjackEvent(this,blackjackEventType.Bust));
+                }
             }
             else
             {
-                Stand();
+                NotifyObservers(new blackjackEvent(this, blackjackEventType.Stand));
             }
         }
         public bool Stand()
@@ -43,21 +50,30 @@ namespace Projekt{
             {
                 hand.AddCard(deck.PopCard()); 
             }
+            if (Blackjack())
+            {
+                NotifyObservers(new blackjackEvent(this, blackjackEventType.Blackjack));
+            }
+        }
+        public void ShowHand(int roundNumber)
+        {
+            behaviour.ShowHand(hand, roundNumber, name);
         }
 
         public bool Bust()
         {
-            if (hand.HandValue() > 21)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            //if (hand.HandValue() > 21)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+            return hand.HandValue() > 21; //Detta är samma sak
         }
 
-        public bool Blackjack()
+        private bool Blackjack()
         {
             if (hand.HandSize() == 2 && hand.HandValue()== 21)
             {

@@ -1,6 +1,6 @@
 
 namespace Projekt{
-class Deck
+public class Deck
 {
     private readonly List<Card> _deck = new();
     private IEnumerable<Card> GenerateDeck() //Skapar en kortlek, dvs ett kort av varje valör och färg  

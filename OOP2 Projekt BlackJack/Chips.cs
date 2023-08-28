@@ -1,6 +1,6 @@
 namespace Projekt
 {
-    class Chips
+    public class Chips
     {
         public int chipStack { get; set; }
         public int bet { get; set; }

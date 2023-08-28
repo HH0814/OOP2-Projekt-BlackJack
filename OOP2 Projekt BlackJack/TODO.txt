@@ -2,7 +2,9 @@
 
 Vad ska vad ska vi använda som en generic data type? bet, chipstack?
 
-Hur ska vi implementera klassen Chips som en generisk datatyp? 
+Hur ska vi implementera klassen Chips som en generisk datatyp?
+
+Generisk observer: Kollar eventen "Blackjack" för både player och dealer, "Coins"
 
 Chips<T in T out> chips = new Chips<T in T out>(T in T out);
 

@@ -1,6 +1,6 @@
 namespace Projekt 
 {
-class Hand
+public class Hand
 {
     //List of Card
     //Method Sum list of Card Values
@@ -24,7 +24,7 @@ class Hand
 
     public int HandValue()
     {
-        List<Card> orderedList = this.HandList.OrderBy(card => card.CardValueTypeToInt()).ToList(); // orderby tar in en funktion som frågar hur vi betraktar ett värde i listan. Vänster sorteras efter det som vi säger till höger.
+        List<Card> orderedList = this.HandList.OrderBy(card => card.CardValueTypeToInt()).ToList(); //orderby tar in en funktion som frågar hur vi betraktar ett värde i listan. Vänster sorteras efter det som vi säger till höger.
         int sum = 0;
 
         for (int i = 0; i < orderedList.Count; i++)

@@ -1,111 +1,180 @@
+using System.Linq.Expressions;
+
 namespace Projekt
 {
-    class GameRound
+    class GameRound : IObserver<blackjackEvent>
     {
-        public static void StartRound(Participant player, Participant dealer)
-        {
-            player.DealCards();
-            System.Console.WriteLine("Your Hand: " + player.hand.PrintHand()); 
-            dealer.DealCards();
-            System.Console.WriteLine("Dealers Hand: " + dealer.hand.HandList[0] + " (" + dealer.hand.HandList[0].CardValueTypeToInt() + ")");
-            //System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand()); //Test
-            if (player.Blackjack())
+        private List<Participant> players = new List<Participant>(); //Lista av Participant som inehåller både spelare och dealers
+        private Participant dealer;
+        public GameRound(List<Participant> players, Participant dealer) //En lista avplayers, loopa igenom alla i den här listan och attacha till observern
+        {  
+            this.players = players; 
+            this.dealer = dealer;
+            foreach (Participant p in this.players) 
             {
-                System.Console.WriteLine("BLACKJACK! YOU WIN!");
+                p.Attach(this); //Subjekten player och dealer har fått GameRound som observer
             }
+            dealer.Attach(this); //Attachar dealer till observer
+        }
 
-
+    public void StartRound()
+        {
+            List<Participant> participants = new List<Participant>();
+            foreach (Participant p in this.players) //En lista av både players och dealern, där dealern är längst bak, loopa igenom alla i den här listan
+            {
+                participants.Add(p);
+            }
+            participants.Add(dealer);
+            int roundNumber = 0;
+            foreach (Participant p in participants)
+            {
+                p.DealCards();
+                p.ShowHand(roundNumber);
+            }
+            //System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand()); //Test
+            while (participants.Any(p => !p.done)) //Loopar så länge ingen participant i listan standar eller bustar eller får Blackjack
+            {
+                roundNumber++;
+                foreach (Participant p in participants)
+                {
+                    if(!p.done)
+                    {
+                        p.Hit();
+                        p.ShowHand(roundNumber);
+                    }
+                }
+            }
+            RoundResult(); //Lägg kanske in hur många rundor som spelades
         } 
 
-        public static void MakeMove(Participant player, Participant dealer)
-        {
-            int move;
-            do
-            {
-                System.Console.WriteLine("Do you want to hit or stand?");
-                System.Console.WriteLine("1 = HIT\n2 = STAND");
-                //move = int.Parse(Console.ReadLine());
-                var input = Console.ReadLine();
-                int.TryParse(input, out move);
-                switch (move)
-                {
-                    case 1:
-                    player.Hit();
-                    System.Console.WriteLine("Your Hand: " + player.hand.PrintHand());   
-                    System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
-                    if(dealer.Blackjack())
-                    {
-                        System.Console.WriteLine("DEALER HAS BLACKJACK! YOU LOSE!");
-                    }
-                    if(player.Bust())
-                    {
-                        System.Console.WriteLine("BUST! YOU LOSE!");
-                    } 
-                    break;
-                    case 2:
-                    player.Stand();
-                    do
-                    {
-                        System.Console.WriteLine("Dealer hits.");
-                        dealer.Hit();
-                        System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
-                        if(dealer.Bust())
-                        {
-                            System.Console.WriteLine("DEALER BUST! YOU WIN!");
-                        } 
-                        else if(dealer.Stand())
-                        {
-                           System.Console.WriteLine("Dealer stands.");
-                           RoundResult(player, dealer);
-                           break;
-                        }
-                    }
-                    while (!dealer.Stand() || !dealer.Bust());
-                    break;
-                    case 3:
-                    player.DoubleDown();
-                    {
-                            player.DoubleDown();
-                            System.Console.WriteLine("Your Hand: " + player.hand.PrintHand());
-                            System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
-                            if (dealer.Blackjack())
-                            {
-                                System.Console.WriteLine("DEALER HAS BLACKJACK! YOU LOSE!");
-                            }
-                            if (player.Bust())
-                            {
-                                System.Console.WriteLine("BUST! YOU LOSE!");
-                            }
+        //public void MakeMove()
+        //{
+        //    int move;
+        //    do
+        //    {
+        //        //System.Console.WriteLine("Do you want to hit or stand?");
+        //        //System.Console.WriteLine("1 = HIT\n2 = STAND");
+        //        //move = int.Parse(Console.ReadLine());
+        //        //var input = Console.ReadLine();
+        //        //int.TryParse(input, out move);
+        //        switch (move)
+        //        {
+        //            case 1:
+        //            player.Hit();
+        //            System.Console.WriteLine("Your Hand: " + player.hand.PrintHand());   
+        //            System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
+        //            if(dealer.Blackjack())
+        //            {
+        //                System.Console.WriteLine("DEALER HAS BLACKJACK! YOU LOSE!");
+        //            }
+        //            if(player.Bust())
+        //            {
+        //                System.Console.WriteLine("BUST! YOU LOSE!");
+        //            } 
+        //            break;
+        //            case 2:
+        //            player.Stand();
+        //            do
+        //            {
+        //                System.Console.WriteLine("Dealer hits.");
+        //                dealer.Hit();
+        //                System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
+        //                if(dealer.Bust())
+        //                {
+        //                    System.Console.WriteLine("DEALER BUST! YOU WIN!");
+        //                } 
+        //                else if(dealer.Stand())
+        //                {
+        //                   System.Console.WriteLine("Dealer stands.");
+        //                   RoundResult(player, dealer);
+        //                   break;
+        //                }
+        //            }
+        //            while (!dealer.Stand() || !dealer.Bust());
+        //            break;
+        //            case 3:
+        //            player.DoubleDown();
+        //            {
+        //                    player.DoubleDown();
+        //                    System.Console.WriteLine("Your Hand: " + player.hand.PrintHand());
+        //                    System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
+        //                    if (dealer.Blackjack())
+        //                    {
+        //                        System.Console.WriteLine("DEALER HAS BLACKJACK! YOU LOSE!");
+        //                    }
+        //                    if (player.Bust())
+        //                    {
+        //                        System.Console.WriteLine("BUST! YOU LOSE!");
+        //                    }
                             
-                        }
-                    break;
-                    default:
-                    Console.WriteLine("Invalid input\nPress any key to try again.");
-                    Console.ReadKey();
-                    break;
+        //                }
+        //            break;
+        //            default:
+        //            Console.WriteLine("Invalid input\nPress any key to try again.");
+        //            Console.ReadKey();
+        //            break;
                     
-                }
+        //        }
 
-            } while (!move.Equals(2) && !player.Bust());
-        }
-        public static void RoundResult(Participant player, Participant dealer)
+        //    } while (!move.Equals(2) && !player.Bust());
+        //}
+        public void RoundResult()
         {
-            if(player.hand.HandValue() > dealer.hand.HandValue())
+            for (int i = 0; i < players.Count; i++)
             {
-                System.Console.WriteLine("YOU WIN!");
-            }
-            else
-            {
-                System.Console.WriteLine("YOU LOSE!");
-            }
+                Participant player = (Participant)players[i];
+                if (player.Bust())
+                {
+                    System.Console.WriteLine("PLAYER " + (i + 1) + " BUST!");
+                }
+                else if(dealer.Bust())
+                {
+                    System.Console.WriteLine("PLAYER " + (i + 1) + " WON!");
+                }
+                else if (player.hand.HandValue() > dealer.hand.HandValue())
+                {
+                    System.Console.WriteLine("PLAYER " + (i + 1) + " WON!");
+                }
+                else if (player.hand.HandValue() < dealer.hand.HandValue())
+                {
+                    System.Console.WriteLine("PLAYER " + (i + 1) + " LOST!");
+                }
+                else
+                {
+                    System.Console.WriteLine("TIE!" + " PLAYER " + (i + 1) + " PUSH");
+                }
+            }    
         }
 
         public static void EndRound()
         {
             System.Console.WriteLine("Round over");
+            //System.Console.WriteLine("Do you want to play again? Y/n");
             Environment.Exit(2);
         }
- 
+
+        public void Update(blackjackEvent eventData)
+        {
+            switch (eventData.EventType)
+            {
+                case blackjackEventType.Blackjack:
+                    Console.WriteLine("blackjack");
+                    break;
+                case blackjackEventType.Bust:
+                    Console.WriteLine("bust");
+                    if (players.All(p => p.Bust())) //När eventet att alla spelare har bustat sker så betyder det att dealern är klar
+                    {
+                        dealer.done = true;
+                    }
+                    break;
+                case blackjackEventType.Stand:
+                    Console.WriteLine("stand");
+                    break;
+            }
+            eventData.participant.done = true; //sätt en flagga för vad som har hänt
+            //Switchcase för vem som vinner typ, vilket leder till någonting
+        }
+
         // list of players
         // pot
         // order

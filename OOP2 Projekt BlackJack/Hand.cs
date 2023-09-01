@@ -63,16 +63,19 @@ public class Hand
     {
         HandList.Add(handCard);
     }
-        public Card GetCard(int index)
-        {
-            Card card = HandList[index];
-            return card;
-        }
-        public void RemoveCard(int index)
-        {
-            HandList.RemoveAt(index);
-        }
-
+    public Card GetCard(int index)
+    {
+        Card card = HandList[index];
+        return card;
+    }
+    public void RemoveCard(int index)
+    {
+        HandList.RemoveAt(index);
+    }
+    public void RemoveAllCards()
+    {
+        HandList.Clear();
+    }
     public Hand()
     {   
         HandList = new List<Card>();

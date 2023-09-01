@@ -11,8 +11,20 @@ namespace Projekt{
         public bool done { set; get; }
         public Chips chipstack { get; set; }//vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
         public string name = "";
-        public void SetName(string inputNameString){
-            name = "PlayerName"; //inputNameString;
+        public string SetPlayerName(){
+            string playerName;  
+            do
+            {
+                Console.Write("Please enter your name: ");
+                playerName = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(playerName))
+                {
+                    Console.WriteLine("Name cannot be empty. Please try again.");
+                }
+            }
+            while (string.IsNullOrWhiteSpace(playerName));
+            name = playerName;
+            return playerName;
         }
         public int Wins { get; set; }
         public int RoundsCompleted { get; set; } = 1;
@@ -20,28 +32,31 @@ namespace Projekt{
         {
             if (behaviour.HitPossible(hand))
             {
+                Console.WriteLine("\n" + name + " Hits");
                 Card newCard = deck.PopCard();
                 hand.AddCard(newCard);
                 if (Bust())
                 {
+                    Console.WriteLine("\n" + name + " BUST");
                     NotifyObservers(new blackjackEvent(this,blackjackEventType.Bust));
                 }
             }
             else
             {
+                Console.WriteLine("\n" + name + " Stands");
                 NotifyObservers(new blackjackEvent(this, blackjackEventType.Stand));
             }
         }
         public bool Stand()
         {
-            if (behaviour.StandPossible(hand))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return behaviour.StandPossible(hand);
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         public void DealCards()
@@ -52,6 +67,7 @@ namespace Projekt{
             }
             if (Blackjack())
             {
+                Console.WriteLine(name + " HAS BLACKJACK");
                 NotifyObservers(new blackjackEvent(this, blackjackEventType.Blackjack));
             }
         }
@@ -62,27 +78,13 @@ namespace Projekt{
 
         public bool Bust()
         {
-            //if (hand.HandValue() > 21)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-            return hand.HandValue() > 21; //Detta är samma sak
+            return hand.HandValue() > 21;
         }
 
         private bool Blackjack()
         {
-            if (hand.HandSize() == 2 && hand.HandValue()== 21)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return hand.HandSize() == 2 && hand.HandValue() == 21;
+
         }
 
         public void DoubleDown()

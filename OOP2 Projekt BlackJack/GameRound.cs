@@ -6,7 +6,7 @@ namespace Projekt
     {
         private List<Participant> players = new List<Participant>(); //Lista av Participant som inehåller både spelare och dealers
         private Participant dealer;
-        public GameRound(List<Participant> players, Participant dealer) //En lista avplayers, loopa igenom alla i den här listan och attacha till observern
+        public GameRound(List<Participant> players, Participant dealer) //En lista av players, loopa igenom alla i den här listan och attacha till observern
         {  
             this.players = players; 
             this.dealer = dealer;
@@ -17,30 +17,47 @@ namespace Projekt
             dealer.Attach(this); //Attachar dealer till observer
         }
 
-    public void StartRound()
+    public void StartGame()
         {
-            List<Participant> participants = new List<Participant>();
-            foreach (Participant p in this.players) //En lista av både players och dealern, där dealern är längst bak, loopa igenom alla i den här listan
-            {
-                participants.Add(p);
-            }
-            participants.Add(dealer);
+            //List<Participant> participants = new List<Participant>();
+            //foreach (Participant p in this.players) //En lista av både players och dealern, där dealern är längst bak, loopa igenom alla i den här listan
+            //{
+            //    participants.Add(p);
+            //}
+            //participants.Add(dealer);
             int roundNumber = 0;
-            foreach (Participant p in participants)
+            if (roundNumber == 0)
+            {
+
+
+                foreach (Participant p in players)
+                {
+                    p.SetPlayerName();
+                }
+                dealer.name = "Dealer";
+            }
+            foreach (Participant p in players)
             {
                 p.DealCards();
                 p.ShowHand(roundNumber);
             }
-            //System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand()); //Test
-            while (participants.Any(p => !p.done)) //Loopar så länge ingen participant i listan standar eller bustar eller får Blackjack
+            dealer.DealCards();
+            dealer.ShowHand(roundNumber);
+            while (players.Any(p => !p.done) || !dealer.done) //Loopar så länge ingen participant i listan standar eller bustar eller får Blackjack
             {
                 roundNumber++;
-                foreach (Participant p in participants)
+                foreach (Participant p in players)
                 {
                     if(!p.done)
                     {
                         p.Hit();
                         p.ShowHand(roundNumber);
+                    }
+                    else
+                    {
+                        dealer.Hit();
+                        Console.WriteLine();
+                        dealer.ShowHand(roundNumber);
                     }
                 }
             }
@@ -125,54 +142,62 @@ namespace Projekt
                 Participant player = (Participant)players[i];
                 if (player.Bust())
                 {
-                    System.Console.WriteLine("PLAYER " + (i + 1) + " BUST!");
+                    System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " BUST!");
                 }
                 else if(dealer.Bust())
                 {
-                    System.Console.WriteLine("PLAYER " + (i + 1) + " WON!");
+                    System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " WON!");
                 }
                 else if (player.hand.HandValue() > dealer.hand.HandValue())
                 {
-                    System.Console.WriteLine("PLAYER " + (i + 1) + " WON!");
+                    System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " WON!");
                 }
                 else if (player.hand.HandValue() < dealer.hand.HandValue())
                 {
-                    System.Console.WriteLine("PLAYER " + (i + 1) + " LOST!");
+                    System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " LOST!");
                 }
                 else
                 {
-                    System.Console.WriteLine("TIE!" + " PLAYER " + (i + 1) + " PUSH");
+                    System.Console.WriteLine("TIE!" + " PLAYER " + (i + 1) + ": " + player.name + " PUSH");
                 }
             }    
         }
 
-        public static void EndRound()
+        public static bool EndRound()
         {
             System.Console.WriteLine("Round over");
-            //System.Console.WriteLine("Do you want to play again? Y/n");
-            Environment.Exit(2);
+            Console.Write("Do you want to play again? (Y/n): ");
+            string response = Console.ReadLine().Trim();
+
+            if (string.Equals(response, "Y", StringComparison.OrdinalIgnoreCase))
+            {
+                return true; // The player wants to play again
+            }
+            else
+            {
+                return false; // The player does not want to play again
+            }
         }
 
         public void Update(blackjackEvent eventData)
         {
-            switch (eventData.EventType)
-            {
-                case blackjackEventType.Blackjack:
-                    Console.WriteLine("Blackjack");
-                    break;
-                case blackjackEventType.Bust:
-                    Console.WriteLine("Bust");
-                    if (players.All(p => p.Bust())) //När eventet att alla spelare har bustat sker, så betyder det att dealern är klar
-                    {
-                        dealer.done = true;
-                    }
-                    break;
-                case blackjackEventType.Stand:
-                    Console.WriteLine("Stand");
-                    break;
-            }
-            eventData.participant.done = true; //sätt en flagga för vad som har hänt
-            //Switchcase för vem som vinner typ, vilket leder till någonting
+                switch (eventData.EventType)
+                {
+                    case blackjackEventType.Blackjack:
+                        //Console.WriteLine(player.name + " HAS BLACKJACK");
+                        break;
+                    case blackjackEventType.Bust:
+                        //Console.WriteLine(player.name + " BUST");
+                        if (players.All(p => p.Bust())) //När eventet att alla spelare har bustat sker, så betyder det att dealern är klar
+                        {
+                            dealer.done = true;
+                        }
+                        break;
+                    case blackjackEventType.Stand:
+                        //Console.WriteLine(player.name + " Stands");
+                        break;
+                }
+                eventData.participant.done = true; //sätt en flagga för vad som har hänt
         }
 
         // list of players

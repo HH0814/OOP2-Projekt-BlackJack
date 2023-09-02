@@ -26,54 +26,50 @@ namespace Projekt{
             name = playerName;
             return playerName;
         }
-        public int Wins { get; set; }
+        public int Wins { get; set; } = 0;
         public int RoundsCompleted { get; set; } = 1;
-        public void Hit()
+        public void Hit(int _turnNumber)
         {
             if (behaviour.HitPossible(hand))
             {
                 Console.WriteLine("\n" + name + " Hits");
                 Card newCard = deck.PopCard();
                 hand.AddCard(newCard);
+                ShowHand(_turnNumber);
                 if (Bust())
                 {
-                    Console.WriteLine("\n" + name + " BUST");
                     NotifyObservers(new blackjackEvent(this,blackjackEventType.Bust));
                 }
             }
             else
             {
-                Console.WriteLine("\n" + name + " Stands");
                 NotifyObservers(new blackjackEvent(this, blackjackEventType.Stand));
             }
         }
         public bool Stand()
         {
             return behaviour.StandPossible(hand);
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
         }
 
-        public void DealCards()
+        public void DealCards(int turnNumber)
         {
             for (int i = 0; i < 2; i++)
             {
                 hand.AddCard(deck.PopCard()); 
             }
-            if (Blackjack())
+            ShowHand(turnNumber);
+            //if (Blackjack() && behaviour.AnnounceBlackJack(turnNumber))
+            //{     
+            //    NotifyObservers(new blackjackEvent(this, blackjackEventType.Blackjack));
+            //}
+        }
+        public void ShowHand(int turnNumber)
+        {
+            behaviour.ShowHand(hand, turnNumber, name);
+            if (Blackjack() && behaviour.AnnounceBlackJack(turnNumber))
             {
-                Console.WriteLine(name + " HAS BLACKJACK");
                 NotifyObservers(new blackjackEvent(this, blackjackEventType.Blackjack));
             }
-        }
-        public void ShowHand(int roundNumber)
-        {
-            behaviour.ShowHand(hand, roundNumber, name);
         }
 
         public bool Bust()
@@ -81,7 +77,7 @@ namespace Projekt{
             return hand.HandValue() > 21;
         }
 
-        private bool Blackjack()
+        public bool Blackjack()
         {
             return hand.HandSize() == 2 && hand.HandValue() == 21;
 
@@ -92,9 +88,9 @@ namespace Projekt{
             if (behaviour.DoubleDownPossible(hand, chipstack))
             {
                 //jag tror dett ar ratt
-                Player(deck).chipstack.chipStack -= Player(deck).chipstack.bet;
+                Player(deck).chipstack.Stack -= Player(deck).chipstack.bet;
                 Player(deck).chipstack.bet *= 2;
-                Hit();
+                //Hit();
             }
             else
             {
@@ -110,12 +106,12 @@ namespace Projekt{
                 splitplayer.chipstack.bet = Participant.Player(deck).chipstack.bet; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
                 
                 //remove chips from player nedan. Jag tror anropet ar fel dock...
-                Player(deck).chipstack.chipStack = Player(deck).chipstack.chipStack - Player(deck).chipstack.bet;
+                Player(deck).chipstack.Stack = Player(deck).chipstack.Stack - Player(deck).chipstack.bet;
                 
-                splitplayer.chipstack.chipStack = 0; //bor antagligen vara 0
+                splitplayer.chipstack.Stack = 0; //bor antagligen vara 0
                 splitplayer.hand.AddCard(hand.GetCard(1)); //Ger andra kortet i spelarhanden till splithanden
                 hand.RemoveCard(1); //Detta bor ta bort korten fran orginalspelaren 
-                splitplayer.DealCards(); //Detta dealar ut ett nytt kort till splithanden
+                //splitplayer.DealCards(); //Detta dealar ut ett nytt kort till splithanden
                 return splitplayer; //returnerr splithanden/splitspelaren
             }
             else

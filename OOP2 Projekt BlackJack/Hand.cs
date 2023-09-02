@@ -1,3 +1,5 @@
+using static Projekt.Card;
+
 namespace Projekt 
 {
 public class Hand
@@ -44,10 +46,20 @@ public class Hand
     }
     
     public string PrintHand() 
-    { 
+    {
+        Dictionary<SuitType, ConsoleColor> suitColors;
+        suitColors = new Dictionary<SuitType, ConsoleColor>
+        {
+            { SuitType.Hearts, ConsoleColor.Red },
+            { SuitType.Diamonds, ConsoleColor.Blue },
+            { SuitType.Clubs, ConsoleColor.Green },
+            { SuitType.Spades, ConsoleColor.Gray }
+        };
         string PrintCards = "";
+
         foreach (Card cards in HandList)
         {
+            Console.ForegroundColor = suitColors[cards.Suit]; //Måste fixa detta senare
             PrintCards += cards.ToString();
             PrintCards += " ";
         }

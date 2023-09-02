@@ -6,15 +6,17 @@ namespace Projekt
     {
         public bool HitPossible(Hand pHand);
         public bool StandPossible(Hand pHand);
-        public bool DoubleDownPossible(Hand pHand, Chips pChipStack);
+        public bool DoubleDownPossible(Hand pHand, Chips Stack);
         public bool SplitPossible(Hand pHand);
         public void ShowHand(Hand hand, int roundNumber, string playerName);
+        public bool BetPossible(Chips Stack);
+        public bool AnnounceBlackJack(int turnNr);
 
     }
 
     class PlayerBehaviour : IBehaviour
     {
-        public bool HitPossible(Hand playerHand)
+        public bool HitPossible(Hand playerHand) // Metod för spelarens val mellan hit och stand
         {
             int move;
             System.Console.WriteLine("Do you want to hit or stand?");
@@ -23,15 +25,17 @@ namespace Projekt
             int.TryParse(input, out move);
             return move == 1;
         }
+
         public bool StandPossible(Hand pHand)
         {
             return true;
         }
+
         public bool DoubleDownPossible(Hand playerHand, Chips playerChipstack)
         {
             int handValue = playerHand.HandValue();
             int handSize = playerHand.HandSize();
-            int chipStack = playerChipstack.chipStack;
+            int chipStack = playerChipstack.Stack;
             int bet = playerChipstack.bet;
             //if (handSize == 2 && (handValue == 9 || handValue == 10 || handValue == 11) && chipStack > bet)
             //{
@@ -43,6 +47,7 @@ namespace Projekt
             //}
             return handSize == 2 && (handValue == 9 || handValue == 10 || handValue == 11) && chipStack > bet;
         }
+
         public bool SplitPossible(Hand playerHand) //Används inte just nu
         {
             int handValue = playerHand.HandValue();
@@ -56,6 +61,16 @@ namespace Projekt
         {
             System.Console.WriteLine(playerName + "s'" + " Hand: " + hand.PrintHand());
         }
+
+        public bool BetPossible(Chips Stack)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AnnounceBlackJack(int turnNr)
+        {
+            return turnNr == 1;
+        }
     }
     class DealerBehaviour : IBehaviour
     {
@@ -64,23 +79,26 @@ namespace Projekt
             int handValue = dealerHand.HandValue();
             return handValue < 17; //Måste hitta om handens värde är under 17
         }
+
         public bool StandPossible(Hand dealerHand)
         {
             int handValue = dealerHand.HandValue();
             return handValue >= 17; //Måste standa om handens värde är 17 eller över 
         }
+
         public bool DoubleDownPossible(Hand dealerHand, Chips dealerChipstack)
         {
             return false;
         }
+
         public bool SplitPossible(Hand dealerHand)
         {
             return false;
         }
 
-        public void ShowHand(Hand hand, int roundNumber, string _playerName)
+        public void ShowHand(Hand hand, int turnNumber, string _playerName)
         {
-            if (roundNumber == 0)
+            if (turnNumber == 1)
             {
                 System.Console.WriteLine("Dealers Hand: " + hand.HandList[0] + " (" + hand.HandList[0].CardValueTypeToInt() + ")");
             }
@@ -88,6 +106,16 @@ namespace Projekt
             {
                 System.Console.WriteLine("Dealers Hand: " + hand.PrintHand());
             }
+        }
+
+        public bool BetPossible(Chips Stack)
+        {
+            return false;
+        }
+
+        public bool AnnounceBlackJack(int turnNr) //vi vill inte att dealern ska announca blackjack utan att ha visat båda sina kort
+        {
+            return turnNr > 1;
         }
     }        
 }

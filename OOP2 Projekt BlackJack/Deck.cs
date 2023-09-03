@@ -25,14 +25,14 @@ public class Deck
             _deck[k] = _deck[n];
             _deck[n] = InDeck;
         }
-
     }
     public Deck() //Konstruktor för deck
     {
         _deck = GenerateDeck().ToList();
     }
 
-    public Card PopCard() { //Metod för att plocka ur det första kortet ur leken och returnera den.
+    public Card PopCard() //Metod för att plocka ur det första kortet ur leken och returnera den.
+        { 
         Card firstCard = _deck[0];
         _deck.RemoveAt(0);
         return firstCard; 

@@ -21,24 +21,24 @@ namespace Projekt
 
     public void StartGame(int roundNumber)
         {
-            //List<Participant> participants = new List<Participant>();
-            //foreach (Participant p in this.players) //En lista av både players och dealern, där dealern är längst bak, loopa igenom alla i den här listan
-            //{
-            //    participants.Add(p);
-            //}
-            //participants.Add(dealer);
             int turnNumber = 1;
             if (roundNumber == 0)
             {
-
-
                 foreach (Participant p in players)
                 {
                     p.SetPlayerName();
                 }
                 dealer.name = "Dealer"; //AUUUUUUGH
             }
-            foreach (Participant p in players)
+            if (turnNumber == 1)
+            {
+                foreach (Participant p in players)
+                {
+                    p.printChipStack();
+                    //p.chipstack.PlaceBet();
+                }
+            }
+                foreach (Participant p in players)
             {
                 p.DealCards(turnNumber);
                 //p.ShowHand(turnNumber);
@@ -162,10 +162,9 @@ namespace Projekt
                     System.Console.WriteLine("TIE!" + " PLAYER " + (i + 1) + ": " + player.name + " PUSH");
                 }
             }
-            EndRound();
         }
 
-        public static bool EndRound()
+        public bool EndRound()
         {
             System.Console.WriteLine("\n" + "Round over");
             Console.Write("\n" + "Do you want to play another round? (Y/n): ");
@@ -173,6 +172,7 @@ namespace Projekt
 
             if (string.Equals(response, "Y", StringComparison.OrdinalIgnoreCase))
             {
+                Console.Clear();
                 return true; // The player wants to play again
             }
             else

@@ -9,7 +9,7 @@ namespace Projekt{
         public Hand hand;
         public Deck deck;
         public bool done { set; get; }
-        public Chips chipstack { get; set; }//vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
+        public Chips chipstack = new Chips(1000); //vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
         public string name = "";
         public string SetPlayerName(){
             string playerName;  
@@ -83,43 +83,49 @@ namespace Projekt{
 
         }
 
-        public void DoubleDown()
+        public void printChipStack()
         {
-            if (behaviour.DoubleDownPossible(hand, chipstack))
-            {
-                //jag tror dett ar ratt
-                Player(deck).chipstack.Stack -= Player(deck).chipstack.bet;
-                Player(deck).chipstack.bet *= 2;
-                //Hit();
-            }
-            else
-            {
-                Stand();
-            }
+            string stackString = chipstack.Stack.ToString();
+            Console.WriteLine(name + " Chipstack: " + stackString);
         }
 
-        public Participant? Split()
-        {
-            if (behaviour.SplitPossible(hand))
-            {
-                Participant splitplayer = new Participant(new PlayerBehaviour(), deck); //instansierar en ny player som spelar splithanden
-                splitplayer.chipstack.bet = Participant.Player(deck).chipstack.bet; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
-                
-                //remove chips from player nedan. Jag tror anropet ar fel dock...
-                Player(deck).chipstack.Stack = Player(deck).chipstack.Stack - Player(deck).chipstack.bet;
-                
-                splitplayer.chipstack.Stack = 0; //bor antagligen vara 0
-                splitplayer.hand.AddCard(hand.GetCard(1)); //Ger andra kortet i spelarhanden till splithanden
-                hand.RemoveCard(1); //Detta bor ta bort korten fran orginalspelaren 
-                //splitplayer.DealCards(); //Detta dealar ut ett nytt kort till splithanden
-                return splitplayer; //returnerr splithanden/splitspelaren
-            }
-            else
-            {
-                Console.WriteLine("Something went wrong"); //Ersatt
-                return null;
-            }
-        }
+        //public void DoubleDown()
+        //{
+        //    if (behaviour.DoubleDownPossible(hand, chipstack))
+        //    {
+        //        //jag tror dett ar ratt
+        //        Player(deck).chipstack.Stack -= Player(deck).chipstack.bet;
+        //        Player(deck).chipstack.bet *= 2;
+        //        //Hit();
+        //    }
+        //    else
+        //    {
+        //        Stand();
+        //    }
+        //}
+
+        //public Participant? Split()
+        //{
+        //    if (behaviour.SplitPossible(hand))
+        //    {
+        //        Participant splitplayer = new Participant(new PlayerBehaviour(), deck); //instansierar en ny player som spelar splithanden
+        //        splitplayer.chipstack.bet = Participant.Player(deck).chipstack.bet; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
+
+        //        //remove chips from player nedan. Jag tror anropet ar fel dock...
+        //        Player(deck).chipstack.Stack = Player(deck).chipstack.Stack - Player(deck).chipstack.bet;
+
+        //        splitplayer.chipstack.Stack = 0; //bor antagligen vara 0
+        //        splitplayer.hand.AddCard(hand.GetCard(1)); //Ger andra kortet i spelarhanden till splithanden
+        //        hand.RemoveCard(1); //Detta bor ta bort korten fran orginalspelaren 
+        //        //splitplayer.DealCards(); //Detta dealar ut ett nytt kort till splithanden
+        //        return splitplayer; //returnerr splithanden/splitspelaren
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("Something went wrong"); //Ersatt
+        //        return null;
+        //    }
+        //}
 
         public static Participant Dealer(Deck deck)
         {   

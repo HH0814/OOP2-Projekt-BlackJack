@@ -4,8 +4,12 @@ namespace Projekt
 {
     public class Chips
     {
-        public int Stack { get; set; } = 1000;
-        public int bet { get; set; }
+        public int Stack { get; private set; }
+        public Chips(int startAmount)
+        {
+            Stack = startAmount;
+        }
+        //public int bet { get; set; }
         public bool PlaceBet()
         {
             Console.WriteLine("Select your bet amount:");
@@ -35,8 +39,7 @@ namespace Projekt
                 return false;
             }
         }
-
-        private bool TryPlaceBet(int betAmount)
+        public bool TryPlaceBet(int betAmount)
         {
             if (betAmount > Stack)
             {
@@ -62,22 +65,23 @@ namespace Projekt
         }
         public void transferChips(Chips receivingChipStack, Chips givingChipStack, int input)
         {
-            bet = input;
+            //bet = input;
             receivingChipStack.addChips(input);
             givingChipStack.subtractChips(input);
         }
-        public string printChipStack()
-        {
-            return Stack.ToString();
-        }
-        public string printBet()
-        {
-            return bet.ToString();
-        }
-        public int getBet()
-        {
-            return bet;
-        }
+        //public void printChipStack()
+        //{
+        //    string stackString = Stack.ToString();
+        //    Console.WriteLine(stackString);
+        //}
+        //public string printBet()
+        //{
+        //    return bet.ToString();
+        //}
+        //public int getBet()
+        //{
+        //    return bet;
+        //}
         public int getChipstack()
         {
             return Stack;

@@ -36,7 +36,7 @@ namespace Projekt
             int handValue = playerHand.HandValue();
             int handSize = playerHand.HandSize();
             int chipStack = playerChipstack.Stack;
-            int bet = playerChipstack.bet;
+            //int bet = playerChipstack.bet;
             //if (handSize == 2 && (handValue == 9 || handValue == 10 || handValue == 11) && chipStack > bet)
             //{
             //    return true;
@@ -45,7 +45,8 @@ namespace Projekt
             //{
             //    return false;
             //}
-            return handSize == 2 && (handValue == 9 || handValue == 10 || handValue == 11) && chipStack > bet;
+            //return handSize == 2 && (handValue == 9 || handValue == 10 || handValue == 11) && chipStack > bet;
+            return handValue == chipStack;
         }
 
         public bool SplitPossible(Hand playerHand) //Används inte just nu

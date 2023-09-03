@@ -40,6 +40,7 @@ class Program
             }
             }
             Environment.Exit(0); //Spelet avslutas
+
             //System.Console.WriteLine("Input player name");
             //Console.WriteLine(deck.PrintDeck());
             //Console.WriteLine($"There are {dealer.GetDeck().Count} cards in the deck");

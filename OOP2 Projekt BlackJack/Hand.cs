@@ -35,20 +35,20 @@ public class Hand
         Dictionary<SuitType, string> suitColors;
         suitColors = new Dictionary<SuitType, string>
         {
-            { SuitType.Hearts, "\u001b[31m" }, // ANSI escape code for red
-            { SuitType.Diamonds, "\u001b[34m" }, // ANSI escape code for blue
-            { SuitType.Clubs, "\u001b[32m" }, // ANSI escape code for green
-            { SuitType.Spades, "\u001b[37m" } // ANSI escape code for gray
+            { SuitType.Hearts, "\u001b[31m" },
+            { SuitType.Diamonds, "\u001b[34m" }, 
+            { SuitType.Clubs, "\u001b[32m" },
+            { SuitType.Spades, "\u001b[37m" }
         };
 
-        string resetColor = "\u001b[0m"; // ANSI escape code to reset color
+        string resetColor = "\u001b[0m";
         StringBuilder PrintCards = new StringBuilder();
 
         foreach (Card cards in HandList)
         {
             PrintCards.Append(suitColors[cards.Suit]);
             PrintCards.Append(cards.ToString());
-            PrintCards.Append(resetColor); // Reset color for the next card
+            PrintCards.Append(resetColor);
             PrintCards.Append(" ");
         }
         PrintCards.Append("(" + HandValue() + ")");

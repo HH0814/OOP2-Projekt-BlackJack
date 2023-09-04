@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-//Tanken med denna klass är att skapa ett observerpattern som Anton Backe rekommenderade, där det som observeras är eventet där spelaren får blackjack
-
 //Interfacet för observeraren
 public interface IObserver<T>
 {
@@ -35,8 +33,7 @@ public class Subject<T>
     }
 }
 
-// Concrete Observer
-public enum blackjackEventType {Blackjack, Bust, Stand}
+public enum blackjackEventType { Blackjack, Bust, Stand }
 public class blackjackEvent
 {
     public Participant participant;

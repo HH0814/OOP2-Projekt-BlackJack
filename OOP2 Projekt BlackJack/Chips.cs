@@ -2,35 +2,39 @@ using System.Collections.Generic;
 
 namespace Projekt
 {
-    public class Chips
+    public class Chips : IObserver<roundoverEvent>
     {
         public int Stack { get; private set; }
+        private List<int> bettingAmounts;
         public Chips(int startAmount)
         {
             Stack = startAmount;
+            bettingAmounts = new List<int>() { 100, 200, 500};
         }
-        //public int bet { get; set; }
-        public bool PlaceBet()
+        private int bet { get; set; } = 0;
+        public bool PlaceBet(string playerName)
         {
-            Console.WriteLine("Select your bet amount:");
-            Console.WriteLine("1. 100 credits");
-            Console.WriteLine("2. 200 credits");
-            Console.WriteLine("3. 500 credits");
+            Console.WriteLine(playerName + ": Select your bet amount:");
+            for (int i = 0; i < bettingAmounts.Count; i++)
+            {
+                Console.WriteLine(i+1 + ". " + bettingAmounts[i] + " credits");
+            }
 
             int choice;
-            if (int.TryParse(Console.ReadLine(), out choice))
+            if (int.TryParse(Console.ReadLine(), out choice)) //out
             {
-                switch (choice)
+                try
                 {
-                    case 1:
-                        return TryPlaceBet(100);
-                    case 2:
-                        return TryPlaceBet(200);
-                    case 3:
-                        return TryPlaceBet(500);
-                    default:
-                        Console.WriteLine("Invalid choice. Please select a valid option.");
-                        return false;
+                    if (TryPlaceBet(bettingAmounts[choice - 1]))
+                    {
+                        bet = bettingAmounts[choice - 1];
+                        return true;
+                    }
+                    return false;
+                }catch(IndexOutOfRangeException _e)
+                {
+                    Console.WriteLine("Invalid choice. Please select a valid option.");
+                    return false;
                 }
             }
             else
@@ -59,32 +63,22 @@ namespace Projekt
             return Stack -= input;
         }
 
-        public int emptyChipStack()
-        {  //Ar denna ens nodvandig? Kanske for att tomma sjalva potten men borde ju hanteras med transferChips.
-            return Stack = 0;
-        }
-        public void transferChips(Chips receivingChipStack, Chips givingChipStack, int input)
+        public void Update(roundoverEvent eventData)
         {
-            //bet = input;
-            receivingChipStack.addChips(input);
-            givingChipStack.subtractChips(input);
-        }
-        //public void printChipStack()
-        //{
-        //    string stackString = Stack.ToString();
-        //    Console.WriteLine(stackString);
-        //}
-        //public string printBet()
-        //{
-        //    return bet.ToString();
-        //}
-        //public int getBet()
-        //{
-        //    return bet;
-        //}
-        public int getChipstack()
-        {
-            return Stack;
+            switch (eventData.EventType)
+            {
+            case roundoverEventType.Win:                   
+                    addChips(bet*2);
+                    Console.WriteLine(eventData.participant.name + " recieves " + (bet * 2) + " chips");
+                    break;
+            case roundoverEventType.Tie:
+                    addChips(bet);
+                    Console.WriteLine(eventData.participant.name + " chips are returned " + "(" + bet + ")" );    
+                    break;
+            case roundoverEventType.Lose:
+                break;
+            }
+            bet = 0;
         }
     }
 }

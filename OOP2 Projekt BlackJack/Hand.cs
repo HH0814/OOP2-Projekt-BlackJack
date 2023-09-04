@@ -5,25 +5,9 @@ namespace Projekt
 {
 public class Hand
 {
-    //List of Card
-    //Method Sum list of Card Values
     private int handSize;
 
     public List<Card> HandList {get; set; }
-    /*public int HandValue()
-    {
-        HandList.Sort();
-        int handValue = 0;
-        foreach(Card card in HandList)
-        {
-            handValue += card.CardValueTypeToInt();
-            if (handValue < 21) 
-            {
-                int alwaysAce = HandList.Last().CardValueTypeToInt();
-                alwaysAce = 1;
-            }
-        }
-        return handValue;*/
 
     public int HandValue()
     {

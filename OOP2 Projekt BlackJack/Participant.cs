@@ -5,11 +5,10 @@ namespace Projekt{
     public class Participant : Subject<blackjackEvent>
     {
         private IBehaviour behaviour;
-        //bor vi egentligen ha public participant participant; isallet for hand deck och chips. eller gar det inte pga deck?
         public Hand hand;
         public Deck deck;
         public bool done { set; get; }
-        public Chips chipstack = new Chips(1000); //vi behover denna for att kunna gora split och double ar jag ratt saker pa. 
+        public Chips chipstack = new Chips(1000); //Här får varje deltagare en egen chipstack 
         public string name = "";
         public string SetPlayerName(){
             string playerName;  
@@ -30,7 +29,7 @@ namespace Projekt{
         public int RoundsCompleted { get; set; } = 1;
         public void Hit(int _turnNumber)
         {
-            if (behaviour.HitPossible(hand))
+            if (behaviour.HitPossible(this))
             {
                 Console.WriteLine("\n" + name + " Hits");
                 Card newCard = deck.PopCard();
@@ -46,10 +45,6 @@ namespace Projekt{
                 NotifyObservers(new blackjackEvent(this, blackjackEventType.Stand));
             }
         }
-        public bool Stand()
-        {
-            return behaviour.StandPossible(hand);
-        }
 
         public void DealCards(int turnNumber)
         {
@@ -58,10 +53,6 @@ namespace Projekt{
                 hand.AddCard(deck.PopCard()); 
             }
             ShowHand(turnNumber);
-            //if (Blackjack() && behaviour.AnnounceBlackJack(turnNumber))
-            //{     
-            //    NotifyObservers(new blackjackEvent(this, blackjackEventType.Blackjack));
-            //}
         }
         public void ShowHand(int turnNumber)
         {
@@ -86,46 +77,8 @@ namespace Projekt{
         public void printChipStack()
         {
             string stackString = chipstack.Stack.ToString();
-            Console.WriteLine(name + " Chipstack: " + stackString);
+            Console.WriteLine("\n" + name + " Chipstack: " + stackString);
         }
-
-        //public void DoubleDown()
-        //{
-        //    if (behaviour.DoubleDownPossible(hand, chipstack))
-        //    {
-        //        //jag tror dett ar ratt
-        //        Player(deck).chipstack.Stack -= Player(deck).chipstack.bet;
-        //        Player(deck).chipstack.bet *= 2;
-        //        //Hit();
-        //    }
-        //    else
-        //    {
-        //        Stand();
-        //    }
-        //}
-
-        //public Participant? Split()
-        //{
-        //    if (behaviour.SplitPossible(hand))
-        //    {
-        //        Participant splitplayer = new Participant(new PlayerBehaviour(), deck); //instansierar en ny player som spelar splithanden
-        //        splitplayer.chipstack.bet = Participant.Player(deck).chipstack.bet; /*Har vill vi ha bet av spelaren, har ej fattat ratt anrop an*/
-
-        //        //remove chips from player nedan. Jag tror anropet ar fel dock...
-        //        Player(deck).chipstack.Stack = Player(deck).chipstack.Stack - Player(deck).chipstack.bet;
-
-        //        splitplayer.chipstack.Stack = 0; //bor antagligen vara 0
-        //        splitplayer.hand.AddCard(hand.GetCard(1)); //Ger andra kortet i spelarhanden till splithanden
-        //        hand.RemoveCard(1); //Detta bor ta bort korten fran orginalspelaren 
-        //        //splitplayer.DealCards(); //Detta dealar ut ett nytt kort till splithanden
-        //        return splitplayer; //returnerr splithanden/splitspelaren
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("Something went wrong"); //Ersatt
-        //        return null;
-        //    }
-        //}
 
         public static Participant Dealer(Deck deck)
         {   

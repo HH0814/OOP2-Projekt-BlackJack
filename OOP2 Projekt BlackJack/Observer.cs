@@ -29,6 +29,10 @@ public class Subject<T>
             observer.Update(eventData);
         }
     }
+    public void NotifyObserver(T eventData, IObserver<T> observer)
+    {
+        observer?.Update(eventData);
+    }
 }
 
 // Concrete Observer
@@ -38,6 +42,17 @@ public class blackjackEvent
     public Participant participant;
     public blackjackEventType EventType;
     public blackjackEvent(Participant participant, blackjackEventType EventType)
+    {
+        this.participant = participant;
+        this.EventType = EventType;
+    }
+}
+public enum roundoverEventType { Win, Tie, Lose }
+public class roundoverEvent
+{
+    public Participant participant;
+    public roundoverEventType EventType;
+    public roundoverEvent(Participant participant, roundoverEventType EventType)
     {
         this.participant = participant;
         this.EventType = EventType;

@@ -4,7 +4,7 @@ using static Projekt.Card;
 
 namespace Projekt
 {
-    class GameRound : IObserver<blackjackEvent>
+    class GameRound : Subject<roundoverEvent>, IObserver<blackjackEvent> 
     {
         private List<Participant> players = new List<Participant>(); //Lista av Participant som inehåller både spelare och dealers
         private Participant dealer;
@@ -15,36 +15,37 @@ namespace Projekt
             foreach (Participant p in this.players) 
             {
                 p.Attach(this); //Subjekten player och dealer har fått GameRound som observer
+                //this.Attach(p.chipstack); //Subjektet (gameround) lägger till observern (Chips) som en observer
             }
             dealer.Attach(this); //Attachar dealer till observer
         }
-
-    public void StartGame(int roundNumber)
+        public void initGame()
+        {
+            foreach (Participant p in players)
+            {
+                p.SetPlayerName();
+            }
+            dealer.name = "Dealer"; //Lite fult men det funkar
+        }
+        public void StartGame(int roundNumber)
         {
             int turnNumber = 1;
-            if (roundNumber == 0)
-            {
-                foreach (Participant p in players)
-                {
-                    p.SetPlayerName();
-                }
-                dealer.name = "Dealer"; //AUUUUUUGH
-            }
+
             if (turnNumber == 1)
             {
                 foreach (Participant p in players)
                 {
                     p.printChipStack();
-                    //p.chipstack.PlaceBet();
+                    p.chipstack.PlaceBet(p.name);
                 }
             }
-                foreach (Participant p in players)
+
+            foreach (Participant p in players)
             {
                 p.DealCards(turnNumber);
-                //p.ShowHand(turnNumber);
             }
             dealer.DealCards(turnNumber);
-            //dealer.ShowHand(turnNumber);
+
             while (players.Any(p => !p.done) || !dealer.done) //Loopar så länge ingen player i listan eller dealern standar eller bustar eller får Blackjack
             {
                 turnNumber++;
@@ -64,102 +65,36 @@ namespace Projekt
             RoundResult(roundNumber); //Lägg kanske in hur många rundor som spelades
         } 
 
-        //public void MakeMove()
-        //{
-        //    int move;
-        //    do
-        //    {
-        //        //System.Console.WriteLine("Do you want to hit or stand?");
-        //        //System.Console.WriteLine("1 = HIT\n2 = STAND");
-        //        //move = int.Parse(Console.ReadLine());
-        //        //var input = Console.ReadLine();
-        //        //int.TryParse(input, out move);
-        //        switch (move)
-        //        {
-        //            case 1:
-        //            player.Hit();
-        //            System.Console.WriteLine("Your Hand: " + player.hand.PrintHand());   
-        //            System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
-        //            if(dealer.Blackjack())
-        //            {
-        //                System.Console.WriteLine("DEALER HAS BLACKJACK! YOU LOSE!");
-        //            }
-        //            if(player.Bust())
-        //            {
-        //                System.Console.WriteLine("BUST! YOU LOSE!");
-        //            } 
-        //            break;
-        //            case 2:
-        //            player.Stand();
-        //            do
-        //            {
-        //                System.Console.WriteLine("Dealer hits.");
-        //                dealer.Hit();
-        //                System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
-        //                if(dealer.Bust())
-        //                {
-        //                    System.Console.WriteLine("DEALER BUST! YOU WIN!");
-        //                } 
-        //                else if(dealer.Stand())
-        //                {
-        //                   System.Console.WriteLine("Dealer stands.");
-        //                   RoundResult(player, dealer);
-        //                   break;
-        //                }
-        //            }
-        //            while (!dealer.Stand() || !dealer.Bust());
-        //            break;
-        //            case 3:
-        //            player.DoubleDown();
-        //            {
-        //                    player.DoubleDown();
-        //                    System.Console.WriteLine("Your Hand: " + player.hand.PrintHand());
-        //                    System.Console.WriteLine("Dealers Hand: " + dealer.hand.PrintHand());
-        //                    if (dealer.Blackjack())
-        //                    {
-        //                        System.Console.WriteLine("DEALER HAS BLACKJACK! YOU LOSE!");
-        //                    }
-        //                    if (player.Bust())
-        //                    {
-        //                        System.Console.WriteLine("BUST! YOU LOSE!");
-        //                    }
-                            
-        //                }
-        //            break;
-        //            default:
-        //            Console.WriteLine("Invalid input\nPress any key to try again.");
-        //            Console.ReadKey();
-        //            break;
-                    
-        //        }
-
-        //    } while (!move.Equals(2) && !player.Bust());
-        //}
         public void RoundResult(int roundNumber)
         {
-            Console.WriteLine("\n" + "Round " + roundNumber + " Results:");
+            Console.WriteLine("\n" + "Round " + (roundNumber+1) + " Results:");
             for (int i = 0; i < players.Count; i++)
             {
                 Participant player = (Participant)players[i];
                 if (player.Bust())
                 {
                     System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " BUST!");
+                    this.NotifyObserver(new roundoverEvent(player, roundoverEventType.Lose), player.chipstack);
                 }
                 else if(dealer.Bust())
                 {
                     System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " WON!");
+                    this.NotifyObserver(new roundoverEvent(player, roundoverEventType.Win), player.chipstack);
                 }
                 else if (player.hand.HandValue() > dealer.hand.HandValue())
                 {
                     System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " WON!");
+                    this.NotifyObserver(new roundoverEvent(player, roundoverEventType.Win), player.chipstack);
                 }
                 else if (player.hand.HandValue() < dealer.hand.HandValue())
                 {
                     System.Console.WriteLine("PLAYER " + (i + 1) + ": " + player.name + " LOST!");
+                    this.NotifyObserver(new roundoverEvent(player, roundoverEventType.Lose), player.chipstack);
                 }
                 else
                 {
                     System.Console.WriteLine("TIE!" + " PLAYER " + (i + 1) + ": " + player.name + " PUSH");
+                    this.NotifyObserver(new roundoverEvent(player, roundoverEventType.Tie), player.chipstack);
                 }
             }
         }
@@ -173,33 +108,37 @@ namespace Projekt
             if (string.Equals(response, "Y", StringComparison.OrdinalIgnoreCase))
             {
                 Console.Clear();
-                return true; // The player wants to play again
+                return true; //Spelaren vill spela igen
             }
             else
             {
-                return false; // The player does not want to play again
+                return false; //Spelaren vill inte spela igen
             }
         }
 
         public void Update(blackjackEvent eventData)
         {
+            if (eventData.participant.done)
+            {
+                return; //Om participanten redan är klar så kommer inget att hända
+            }  
+            eventData.participant.done = true; //sätt en flagga för vad som har hänt
             switch (eventData.EventType)
-                {
-                    case blackjackEventType.Blackjack:
-                        Console.WriteLine(eventData.participant.name + " HAS BLACKJACK");
-                        break;
-                    case blackjackEventType.Bust:
-                        Console.WriteLine(eventData.participant.name + " BUST");
-                    if (players.All(p => p.Bust())) //När eventet att alla spelare har bustat sker, så betyder det att dealern är klar
-                        {
-                            dealer.done = true;
-                        }
-                        break;
-                    case blackjackEventType.Stand:
-                            Console.WriteLine(eventData.participant.name + " STANDS");
-                        break;
-                }
-                eventData.participant.done = true; //sätt en flagga för vad som har hänt
+            {
+                case blackjackEventType.Blackjack:
+                    Console.WriteLine(eventData.participant.name + " HAS BLACKJACK");
+                    break;
+                case blackjackEventType.Bust:
+                    Console.WriteLine(eventData.participant.name + " BUST");
+                if (players.All(p => p.Bust())) //När eventet att alla spelare har bustat sker, så betyder det att dealern är klar
+                    {
+                        dealer.done = true;
+                    }
+                    break;
+                case blackjackEventType.Stand:
+                    Console.WriteLine(eventData.participant.name + " STANDS");
+                    break;
+            }
         }
 
         // list of players

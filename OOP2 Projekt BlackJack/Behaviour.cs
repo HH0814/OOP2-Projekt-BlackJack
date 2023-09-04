@@ -101,7 +101,9 @@ namespace Projekt
         {
             if (turnNumber == 1)
             {
-                System.Console.WriteLine("Dealers Hand: " + hand.HandList[0] + " (" + hand.HandList[0].CardValueTypeToInt() + ")");
+                Hand firsthand = new Hand();
+                firsthand.AddCard(hand.HandList[0]); // Jag gör detta så att dealern bara visar första kortet första "turnen" 
+                System.Console.WriteLine("Dealers Hand: " + firsthand.PrintHand());//hand.HandList[0].pr + " (" + hand.HandList[0].CardValueTypeToInt() + ")");
             }
             else
             {

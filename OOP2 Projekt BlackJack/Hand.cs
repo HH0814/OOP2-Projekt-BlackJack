@@ -1,3 +1,4 @@
+using System.Text;
 using static Projekt.Card;
 
 namespace Projekt 
@@ -47,24 +48,27 @@ public class Hand
     
     public string PrintHand() 
     {
-        Dictionary<SuitType, ConsoleColor> suitColors;
-        suitColors = new Dictionary<SuitType, ConsoleColor>
+        Dictionary<SuitType, string> suitColors;
+        suitColors = new Dictionary<SuitType, string>
         {
-            { SuitType.Hearts, ConsoleColor.Red },
-            { SuitType.Diamonds, ConsoleColor.Blue },
-            { SuitType.Clubs, ConsoleColor.Green },
-            { SuitType.Spades, ConsoleColor.Gray }
+            { SuitType.Hearts, "\u001b[31m" }, // ANSI escape code for red
+            { SuitType.Diamonds, "\u001b[34m" }, // ANSI escape code for blue
+            { SuitType.Clubs, "\u001b[32m" }, // ANSI escape code for green
+            { SuitType.Spades, "\u001b[37m" } // ANSI escape code for gray
         };
-        string PrintCards = "";
+
+        string resetColor = "\u001b[0m"; // ANSI escape code to reset color
+        StringBuilder PrintCards = new StringBuilder();
 
         foreach (Card cards in HandList)
         {
-            Console.ForegroundColor = suitColors[cards.Suit]; //Måste fixa detta senare
-            PrintCards += cards.ToString();
-            PrintCards += " ";
+            PrintCards.Append(suitColors[cards.Suit]);
+            PrintCards.Append(cards.ToString());
+            PrintCards.Append(resetColor); // Reset color for the next card
+            PrintCards.Append(" ");
         }
-        PrintCards += "(" + HandValue() + ")";
-        return PrintCards;
+        PrintCards.Append("(" + HandValue() + ")");
+        return PrintCards.ToString();
     }
     public int HandSize()
     {
